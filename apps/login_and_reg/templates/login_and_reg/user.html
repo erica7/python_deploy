@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quotes</title>
+  </head>
+  <body>
+
+    <form action="/quotes" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Dashboard">
+    </form>
+
+    <form action="/logout" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Logout">
+    </form>
+
+    <h1>Posts by {{that_user.first_name}}</h1>
+    <h3>Count: {{contributions_count.count}}</h3>
+
+    <hr/>
+
+    {% for contribution in contributions %}
+      <p>{{contribution.author}}: {{contribution.quote}}</p>
+    {% endfor %}
+
+  </body>
+</html>

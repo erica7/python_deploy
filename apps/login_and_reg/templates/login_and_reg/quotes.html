@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quotes</title>
+  </head>
+  <body>
+
+    {% if not request.session.logged_in %}
+
+      <h3>You must log in.</h3>
+      <form action='/' method='POST'>
+        {% csrf_token %}
+        <input type="submit" value="Return to Log In">
+      </form>
+      <hr/>
+
+    {% else %}
+
+      <h1>Welcome, {{request.session.first_name}}</h1>
+
+      <form action='/logout' method='POST'>
+        {% csrf_token %}
+        <input type="submit" value="Log Out">
+      </form>
+
+      <hr/>
+
+      <h2>Quotable Quotes</h2>
+      {% for quote in quotes %}
+        <p>{{quote.author}}: {{quote.quote}}</p>
+        <h5>Posted by
+          <form action="/users/{{quote.user_contributor.id}}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="{{quote.user_contributor}}">
+          </form>
+        </h5>
+        <form action="/quotes/{{quote.id}}/favorite" method="post">
+          {% csrf_token %}
+          <input type="submit" value="Add to My List">
+        </form>
+      {% endfor %}
+
+      <hr/>
+
+      <h2>Your Favorites</h2>
+      {% for favorite in favorites %}
+        <p>{{favorite.author}}: {{favorite.quote}}</p>
+        <h5>Posted by
+          <form action="/users/{{favorite.user_contributor.id}}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="{{favorite.user_contributor}}">
+          </form>
+        </h5>
+        <form action="/quotes/{{favorite.id}}/remove_favorite" method="post">
+          {% csrf_token %}
+          <input type="submit" value="Remove from My List">
+        </form>
+      {% endfor %}
+      <hr/>
+
+      <h2>Contribute a Quote</h2>
+
+      {% if messages %}
+      <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+
+      <form action="/quotes/create" method="post">
+        {% csrf_token %}
+        Quoted by: <input type="text" name="author">
+        <br/>
+        Message: <textarea name="quote" rows="8" cols="80"></textarea>
+        <br/>
+        <input type="submit" value="Submit">
+      </form>
+
+    {% endif %}
+
+  </body>
+</html>

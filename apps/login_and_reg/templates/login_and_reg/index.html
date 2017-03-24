@@ -4,45 +4,49 @@
 </head>
 <body>
 
-  <!-- notification area -->
+  {% if request.session.logged_in %}
 
-  {% if 'user' in request.session %}
-    <p>Hello, {{request.session.user}}</p>
+    <h1>Hello, {{request.session.first_name}}. You are already logged in.</h1>
+    <form action='/quotes' method='POST'>
+      {% csrf_token %}
+      <input type="submit" value="Go to Quotes">
+    </form>
+
+  {% else %}
+
+    <h1>Login and Registration</h1>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <hr/>
+
+    <h2>Register new user</h2>
+    <form action='/register' method='POST'>
+      {% csrf_token %}
+      <label for="first_name">First Name: <input type="text" name="first_name" id="first_name" autofocus></label>
+      <label for="last_name">Last Name: <input type="text" name="last_name" id="last_name"></label>
+      <label for="email">Email address: <input type="text" name="email" id="email"></label>
+      <label for="password">Password: <input type="text" name="password" id="password"></label> <!-- change input to type="password" -->
+      <label for="password_conf">Password confirmation: <input type="text" name="password_conf" id="password_conf"></label><!-- change input to type="password" -->
+      <input type="submit" value="Register">
+    </form>
+    <hr>
+
+    <h2>Login</h2>
+    <form action='/login' method='POST'>
+      {% csrf_token %}
+      <label for="email">Email address: <input type="text" name="email" id="email"></label>
+      <label for="password">Password: <input type="text" name="password" id="password"></label> <!-- change input to type="password" -->
+      <input type="submit" value="Log In">
+    </form>
+    <hr>
   {% endif %}
-
-  <h1>Login and Registration</h1>
-
-  {% if messages %}
-  <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-
-  <hr/>
-
-  <h2>Register new user</h2>
-  <form action='/register' method='POST'>
-    {% csrf_token %}
-    <label for="first_name">First Name: <input type="text" name="first_name" id="first_name" autofocus></label>
-    <label for="last_name">Last Name: <input type="text" name="last_name" id="last_name"></label>
-    <label for="email">Email address: <input type="text" name="email" id="email"></label>
-    <label for="password">Password: <input type="text" name="password" id="password"></label> <!-- change input to type="password" -->
-    <label for="password_conf">Password confirmation: <input type="text" name="password_conf" id="password_conf"></label><!-- change input to type="password" -->
-    <input type="submit" value="Register">
-  </form>
-  <hr>
-
-  <h2>Login</h2>
-  <form action='/login' method='POST'>
-    {% csrf_token %}
-    <label for="email">Email address: <input type="text" name="email" id="email"></label>
-    <label for="password">Password: <input type="text" name="password" id="password"></label> <!-- change input to type="password" -->
-    <input type="submit" value="Log In">
-  </form>
-  <hr>
-
 
 </body>
 </html>
